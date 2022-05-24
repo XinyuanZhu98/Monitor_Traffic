@@ -28,11 +28,11 @@ Since this task is done by the Airflow DAG (```dag_id = monitor```) composed of 
 
 ```python
 |-- AIRFLOW_HOME
-|   |-- dags
-|       |-- monitor.py
-|       |-- helpers
-|       |   |-- collect.py
-|       |   |-- detect.py
+    |-- dags
+    |   |-- monitor.py
+    |   |-- helpers
+    |   |   |-- collect.py
+    |   |   |-- detect.py
 ```
 
 
