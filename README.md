@@ -24,4 +24,4 @@ python main.py --area=your_area
 Note that sometimes some images on the website are cropped or damaged and these "bad" images will be ignored and skipped by the program.
 
 * Task 3: Perform a near real-time monitoring of the traffic. This is done by triggering a DAG in Apache Airflow every three minutes which I think is sufficient since the images on the given website refresh roughly at the same time interval (3 min).
-This task is done by the Airflow DAG included in monitor.py.
+Since this task is done by the Airflow DAG included in monitor.py, please move the Python script monitor.py to your AIRFLOW_HOME/dags/. Note that the DAG will need to collaborate with the other two scripts collect.py and detect.py. Please create a new folder helpers/ under AIRFLOW_HOME/dags/ and place both scripts in AIRFLOW_HOME/dags/helpers/.
