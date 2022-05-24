@@ -1,0 +1,8 @@
+matplotlib
+torch 
+torchvision
+numpy
+opencv-python
+Pillow
+beautifulsoup4
+requests
