@@ -7,8 +7,8 @@ To get started, install the required dependencies by running
 pip install -r requirements.txt
 ```
 
-* Task 1: Extract traffic images from a given AREA or all available areas.
-* Task 2: Detect and count the number of cars (or other classes of objects as specified) in the extracted images.
+* **Task 1**: Extract traffic images from a given AREA or all available areas.
+* **Task 2**: Detect and count the number of cars (or other classes of objects as specified) in the extracted images.
 The two tasks can be done by executing the following.
 ```python
 python main.py
@@ -23,7 +23,7 @@ python main.py --area=your_area
 ```
 The model that yields more accurate prediction results will take a longer time to detect. Once you have chosen your own model, it will be automatically downloaded from the torchvision module if not yet exist. And note that sometimes some images on the website are cropped or damaged and these "bad" images will be ignored and skipped by the program.
 
-* Task 3: Perform a near real-time monitoring of the traffic. This is done by triggering a DAG in Apache Airflow every three minutes which I think is sufficient since the images on the given website refresh roughly at the same time interval (3 min) through observation:).  
+* **Task 3**: Perform a near real-time monitoring of the traffic. This is done by triggering a DAG in Apache Airflow every three minutes which I think is sufficient since the images on the given website refresh roughly at the same time interval (3 min) through observation:).  
 Since this task is done by the Airflow DAG (```dag_id = monitor```) composed of two sub-tasks ```collect``` and ```detect``` using ```BashOperator``` included in monitor.py, please move the Python script monitor.py to your AIRFLOW_HOME/dags/. Note that the DAG will need to collaborate with the other two scripts collect.py and detect.py. Please create a new folder helpers/ under AIRFLOW_HOME/dags/ and place both scripts in AIRFLOW_HOME/dags/helpers/. By default, the collected images will be saved to AIRFLOW_HOME/images/.
 
 TBC
