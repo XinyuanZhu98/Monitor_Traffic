@@ -35,4 +35,6 @@ Since this task is done by the Airflow DAG (```dag_id = monitor```) composed of 
     |   |   |-- collect.py
     |   |   |-- detect.py
 ```
-**Logging:** By default, logs are written to the .log files. However, it is possible to enable custom configuration and log to the console by adding an handler to the logger at the beginning of monitor.py so that one can continuously monitor the output of the program. (Reference: https://stackoverflow.com/questions/56882662/how-to-see-logs-of-an-airflow-operator-when-testing)
+**Logging:** By default, logs are written to the .log files. However, it is possible to enable custom configuration and log to the console by
+
+TBC
