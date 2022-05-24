@@ -47,6 +47,6 @@ More info on custom logging:
 https://stackoverflow.com/questions/68467728/custom-logging-in-airflow;  
 https://airflow.apache.org/docs/apache-airflow/stable/logging-monitoring/logging-tasks.html#advanced-configuration
 
-**Problem with my approach to Task 3:**
+**Problems with my approach to Task 3:**
 1. The detection is not sufficiently efficient as it takes 3-3.5 mins per run on my laptop when GPU is not enabled, which means it will probably not capture all changes on the website.
 2. The results are output purely in the form of numbers and this abscense of graphical reporting as well as past memories makes it impossible to directly track the trend of the traffic volume.
