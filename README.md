@@ -36,5 +36,14 @@ Since this task is done by the Airflow DAG (```dag_id = monitor```) composed of 
     |   |   |-- detect.py
 ```
 **Logging:** By default, logs are written to the .log files. However, it is possible to enable custom configuration and log to the console by
-
-TBC
+setting 
+```python
+LOGGING_CONFIG["handlers"]["task"] = {
+    "class": "logging.StreamHandler",
+    "formatter": "airflow",
+    "stream": sys.stdout,
+}
+```
+More info on custom logging:  
+https://stackoverflow.com/questions/68467728/custom-logging-in-airflow;  
+https://airflow.apache.org/docs/apache-airflow/stable/logging-monitoring/logging-tasks.html#advanced-configuration
