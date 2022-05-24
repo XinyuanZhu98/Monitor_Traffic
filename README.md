@@ -25,12 +25,15 @@ The model that yields more accurate prediction results will take a longer time t
 
 * **Task 3**: Perform a near real-time monitoring of the traffic. This is done by triggering a DAG in Apache Airflow every three minutes which I think is sufficient since the images on the given website refresh roughly at the same time interval (3 min) through observation:).  
 Since this task is done by the Airflow DAG (```dag_id = monitor```) composed of two sub-tasks ```collect``` and ```detect``` using ```BashOperator``` included in monitor.py, please move the Python script monitor.py to your AIRFLOW_HOME/dags/. Note that the DAG will need to collaborate with the other two scripts collect.py and detect.py. Please create a new folder helpers/ under AIRFLOW_HOME/dags/ and place both scripts in AIRFLOW_HOME/dags/helpers/, shown as follows. By default, the collected images will be saved to AIRFLOW_HOME/images/.  
+
+```python
 |-- AIRFLOW_HOME
-    |-- dags
-        |-- monitor.py
-        |-- helpers
-        |   |-- collect.py
-        |   |-- detect.py
+|   |-- dags
+|       |-- monitor.py
+|       |-- helpers
+|       |   |-- collect.py
+|       |   |-- detect.py
+```
 
 
 TBC
