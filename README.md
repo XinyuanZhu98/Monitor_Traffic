@@ -17,11 +17,10 @@ You can also specify your own settings by running
 ```python
 python main.py --area=your_area 
                --output_dir==path_to_your_output_folder 
-               --model_quality=your_model_quality 
                --confidence=your_confidence 
                --target_class=your_coco_classes_for_detection
 ```
-The model that yields more accurate prediction results will take a longer time to detect. Once you have chosen your own model, it will be automatically downloaded from the torchvision module if not yet exist. And note that sometimes some images on the website are cropped or damaged and these "bad" images will be ignored and skipped by the program.
+The pre-trained model will be automatically downloaded from the torchvision module if not yet exist. And note that sometimes some images on the website are cropped or damaged and these "bad" images will be ignored and skipped by the program.
 
 * **Task 3**: Perform a near real-time monitoring of the traffic.  
 This is done by triggering a DAG in Apache Airflow every three minutes which I think is sufficient since the images on the given website refresh roughly at the same time interval (3 min) through observation:). By default, only cars are monitored. The code can be modified to include other vehicle classes such as "truck", but as the processing time should not exceed three minutes, I stick with cars.   
