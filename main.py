@@ -12,10 +12,10 @@ if __name__ == "__main__":
         "--output_dir", default="./images/",
         help="The output directory for storing the collected images."
     )
-    parser.add_argument(
-        "--model_quality", default="medium",
-        help="Choose from low, medium, high. A higher quality model takes longer time to detect."
-    )
+    # parser.add_argument(
+    #     "--model_quality", default="medium",
+    #     help="Choose from low, medium, high. A higher quality model takes longer time to detect."
+    # )
     parser.add_argument(
         "--confidence", default=0.5,
         help="The confidence level to sift predictions with high certainties."
@@ -23,6 +23,11 @@ if __name__ == "__main__":
     parser.add_argument(
         "--target_class", default="car",
         help="Target object class for detection."
+    )
+
+    parser.add_argument(
+        "--display", default=False,
+        help="Whether or not to display the detection results."
     )
 
     # Options:
@@ -47,16 +52,16 @@ if __name__ == "__main__":
     if args.area == "all":
         for area in areas:
             detect_object(area,
-                          confidence=args.confidence,
+                          confidence=float(args.confidence),
                           tar_class=args.target_class,
                           main_dir=args.output_dir,
-                          model_quality=args.model_quality)
+                          display_res=args.display)
     elif args.area in areas:
         detect_object(args.area,
-                      confidence=args.confidence,
+                      confidence=float(args.confidence),
                       tar_class=args.target_class,
                       main_dir=args.output_dir,
-                      model_quality=args.model_quality)
+                      display_res=args.display)
 
     print("Elapsed time = % 0.4fs" % (time.time() - start_time))
     print("Done!")

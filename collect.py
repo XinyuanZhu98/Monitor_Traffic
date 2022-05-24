@@ -48,4 +48,4 @@ def extract_image(area, main_dir="/home/xinyuan/images/", verbose=True):
 
 if __name__ == "__main__":
     for area in AREAS:
-        extract_image(area,verbose=False)
+        extract_image(area, verbose=False)

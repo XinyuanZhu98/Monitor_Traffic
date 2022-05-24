@@ -1,7 +1,6 @@
 
 
 from datetime import datetime, timedelta
-from textwrap import dedent
 from airflow import DAG
 
 # Operators
@@ -15,7 +14,7 @@ default_args = {
     "owner": "xinyuan",
     "depends_on_past": False,
     "start_date": datetime(2022, 5, 22),
-    "email": ["xinyuanzhu98@gmail.com"],
+    "email": ["example@gmail.com"],
     "email_on_failure": False,
     "email_on_retry": False,
     "retries": 1,

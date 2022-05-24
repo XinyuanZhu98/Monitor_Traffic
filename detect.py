@@ -28,27 +28,24 @@ COCO_INSTANCE_CATEGORY_NAMES = [
 AREAS = ["woodlands", "sle", "tpe", "kje", "bke", "cte",
          "pie", "kpe", "aye", "mce", "ecp", "stg"]
 
+device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 
-def get_prediction(img_path, confidence, model_quality):
+# The following part of the code will be executed every time
+# Load the pre-trained Faster R-CNN model from torchvision
+model = torchvision.models.detection.fasterrcnn_mobilenet_v3_large_fpn(pretrained=True)
+model.to(device)
+
+# Set the model to evaluation mode
+model.eval()
+
+
+def get_prediction(img_path, confidence):
     """
     Uses pre-trained torchvision models to detect objects in images.
     :param img_path: string, the path to an image.
     :param confidence: float, the confidence level to sift predictions with high certainties.
-    :param model_quality: string, low, medium or high. A higher quality model takes longer time to detect.
     :return: pred_boxes (predicted bounding boxes) and pred_classes (predicted object classes).
     """
-
-    # Load the pre-trained Faster R-CNN model from torchvision
-    if model_quality == "low":
-        model = torchvision.models.detection.fasterrcnn_mobilenet_v3_large_320_fpn(pretrained=True)
-    elif model_quality == "medium":
-        model = torchvision.models.detection.fasterrcnn_mobilenet_v3_large_fpn(pretrained=True)
-    elif model_quality == "high":
-        model = torchvision.models.detection.fasterrcnn_resnet50_fpn(pretrained=True)
-
-    # Set the model to evaluation mode
-    model.eval()
-
     img = Image.open(img_path)
     transform = T.ToTensor()
     try:
@@ -56,20 +53,20 @@ def get_prediction(img_path, confidence, model_quality):
     except OSError:
         print("Truncated image!")
         return [], []
-    pred = model([img])
+    # Implement the Faster R-CNN model
+    pred = model([img.to(device)])
     # Pred is composed of "boxes", "labels", and "scores"
-    pred_boxes = [[(i[0], i[1]), (i[2], i[3])] for i in list(pred[0]["boxes"].detach().numpy())]
     pred_classes = [COCO_INSTANCE_CATEGORY_NAMES[i] for i in list(pred[0]["labels"].detach().numpy())]
     pred_scores = pred[0]["scores"].detach().numpy()
-    if len(pred_boxes) == 0 or pred_scores.max() < confidence:
+    if len(pred_classes) == 0 or pred_scores.max() < confidence:
         return [], []
     thres = np.argwhere(pred_scores >= confidence)[-1][0]
-    # pred_t = [pred_scores.index(x) for x in pred_scores if x > confidence][-1]
+    pred_boxes = [[(i[0], i[1]), (i[2], i[3])] for i in list(pred[0]["boxes"].detach().numpy())]
     return pred_boxes[:thres + 1], pred_classes[:thres + 1]
 
 
-def detect_object(img_dir, tar_class="car", confidence=0.3, main_dir="/home/xinyuan/images/",
-                  model_quality="medium", display_res=False, verbose=True):
+def detect_object(img_dir, tar_class="car", confidence=0.5, main_dir="/home/xinyuan/images/",
+                  display_res=False, verbose=True):
     """
     Detects objects in all the images located in a given directory
     and counts the number of detected objects.
@@ -77,32 +74,33 @@ def detect_object(img_dir, tar_class="car", confidence=0.3, main_dir="/home/xiny
     :param tar_class: string, target object class for detection.
     :param confidence: float, the confidence level to sift predictions with high certainties.
     :param main_dir: string, the main folder that contains sub-folders of images.
-    :param model_quality: string, low, medium or high. A higher quality model takes longer time to detect.
     :param display_res: boolean, specifies whether to display the resulting detections.
     :param verbose: boolean, specifies whether to display detailed logging.
     :return: count_sum (the total number of detected objects in all images located in img_dir)
     """
     count_sum = 0
-    # for filename in os.listdir("./" + img_dir):
+    count_img = 0
     for filename in os.listdir(main_dir + img_dir):
+        count_img += 1
         if verbose:
             print("Processing", filename, "...")
         img_path = main_dir + img_dir + "/" + filename
-        pred_boxes, pred_classes = get_prediction(img_path, confidence, model_quality)
-        if tar_class and tar_class in COCO_INSTANCE_CATEGORY_NAMES:
+        pred_boxes, pred_classes = get_prediction(img_path, confidence)
+        if tar_class in COCO_INSTANCE_CATEGORY_NAMES:  # detect objects belonging to a certain class
             pred_idx = [i for i in range(len(pred_classes)) if pred_classes[i] == tar_class]
-            pred_boxes = [pred_boxes[j] for j in pred_idx]
-            pred_classes = [tar_class] * len(pred_boxes)
+            count_sum += len(pred_idx)
             if verbose:
-                print(len(pred_boxes), tar_class, "(s) found in the image!")
-        elif tar_class:
+                print(len(pred_idx), tar_class, "(s) found in the image!")
+            if display_res:
+                pred_boxes = [pred_boxes[j] for j in pred_idx]
+                pred_classes = [tar_class] * len(pred_boxes)
+        elif tar_class == "all":  # detect all classes of objects
+            count_sum += len(pred_classes)
             if verbose:
-                print("Invalid class name. Exit.")
-            break
+                print(len(pred_classes), "object(s) found in the image!")
         else:
-            if verbose:
-                print(len(pred_boxes), "object(s) found in the image!")
-        count_sum += len(pred_boxes)
+            raise TypeError("Invalid class name.")
+
 
         if display_res:
             img = cv2.imread(img_path)
@@ -119,14 +117,14 @@ def detect_object(img_dir, tar_class="car", confidence=0.3, main_dir="/home/xiny
             plt.imshow(img)
             plt.axis("off")
             plt.show()
-    return count_sum
+    return count_sum, count_img
 
 
 if __name__ == "__main__":
     print("Detecting...")
     count_all = 0
     for area in AREAS:
-        count_area = detect_object(area, verbose=False)
-        print(count_area, "car(s) in the area", area)
+        count_area, count_img = detect_object(area, verbose=False)
+        print(count_area, "car(s) in the area", area, "with", count_img, "images available.")
         count_all += count_area
     print(count_all, "car(s) in all areas.")
