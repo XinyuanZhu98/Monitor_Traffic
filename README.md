@@ -20,7 +20,7 @@ python main.py --area=your_area
                --confidence=your_confidence 
                --target_class=your_coco_classes_for_detection
 ```
-The pre-trained model will be automatically downloaded from the torchvision module if not yet exist. And note that sometimes some images on the website are cropped or damaged and these "bad" images will be ignored and skipped by the program.
+The pre-trained model (I am using a high resolution Faster R-CNN model with a MobileNetV3-Large FPN backbone to balance the detection efficiency and accuracy) will be automatically downloaded from the torchvision module if it not yet exists. And note that sometimes some images on the website are cropped or damaged and these "bad" images will be ignored and skipped by the program.
 
 * **Task 3**: Perform a near real-time monitoring of the traffic.  
 This is done by triggering a DAG in Apache Airflow every three minutes which I think is sufficient since the images on the given website refresh roughly at the same time interval (3 min) through observation:). By default, only cars are monitored. The code can be modified to include other vehicle classes such as "truck", but as the processing time should not exceed three minutes, I stick with cars.   
